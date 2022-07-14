@@ -71,8 +71,8 @@ jobs:
         context: .
         load: true
         build-args: |
-          JAR_FILE=target/products-service-example-0.0.1-SNAPSHOT-spring-boot.jar
-        tags: ignaciomontero2022/products-service-example:${{ github.sha }}
+          JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
+        tags: ignaciomontero2022/orders-service-example:${{ github.sha }}
     
     - name: Levanto docker
       run: |
@@ -93,5 +93,5 @@ jobs:
         context: .
         push: true
         build-args: |
-          JAR_FILE=target/products-service-example-0.0.1-SNAPSHOT-spring-boot.jar
-        tags: ignaciomontero2022/products-service-example:${{ github.sha }}
+          JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
+        tags: ignaciomontero2022/orders-service-example:${{ github.sha }}
