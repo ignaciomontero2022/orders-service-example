@@ -95,7 +95,7 @@ jobs:
         #username: ${{ secrets.AWX_USER }}
         #password: ${{ secrets.AWX_PASSWORD }}
         customHeaders: '{"Content-Type": "application/json"}'
-        data: '[ "123", "321", "111" ]'
+        data: '{ "123", "321", "111" }'
 
     - name: Buildeo y push a docker
       uses: docker/build-push-action@v3
