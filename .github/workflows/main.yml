@@ -1,0 +1,97 @@
+name: Build de imagenes v2.
+
+on:
+  push:
+    branches:
+      - 'master'
+  
+jobs:
+
+  Sonarcloud:
+    name: Escaneo con Sonarcloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJETKEY }}
+      
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5 
+        env: 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          scanMetadataReportFile: target/sonar/report-task.txt
+          
+
+  build_imagen_a_container:
+    name: Buildeo de imagen, test y publicación a Docker Hub.
+    needs: Sonarcloud
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout del codigo
+      uses: actions/checkout@v3
+    - name: Setup del JDK.
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - name: Build con Mave.
+      run: mvn -B package --file pom.xml
+
+    - name: Login a Docker Hub  
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and export to Docker
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        load: true
+        build-args: |
+          JAR_FILE=target/products-service-example-0.0.1-SNAPSHOT-spring-boot.jar
+        tags: ignaciomontero2022/products-service-example:${{ github.sha }}
+    
+    - name: Levanto docker
+      run: |
+        docker run -d --name products-service-example -p 8080:8080 ignaciomontero2022/products-service-example:${{ github.sha }}
+        sleep 30
+    
+    - name: Chequeo de microservicio en container.
+      uses: gerdemann/http-status-code@1.0.0
+      with:
+        url: ${{ secrets.URL_TEST }}
+        code: 200 
+        timeout: 60 
+        interval: 10    
+    
+    - name: Buildeo y push a docker
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        build-args: |
+          JAR_FILE=target/products-service-example-0.0.1-SNAPSHOT-spring-boot.jar
+        tags: ignaciomontero2022/products-service-example:${{ github.sha }}
