@@ -90,7 +90,7 @@ jobs:
     - name: Deploy Stage
       uses: fjogeleit/http-request-action@v1
       with:
-        url: 'htts://127.0.0.1:8080/orders'
+        url: 'http://127.0.0.1:8080/orders'
         method: 'POST'
         #username: ${{ secrets.AWX_USER }}
         #password: ${{ secrets.AWX_PASSWORD }}
