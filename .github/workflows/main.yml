@@ -1,4 +1,4 @@
-name: Build de imagenes v2.
+name: Build de imagenes v2
 
 on:
   push:
