@@ -79,14 +79,24 @@ jobs:
         docker run -d --name products-service-example -p 8080:8080 ignaciomontero2022/orders-service-example:${{ github.sha }}
         sleep 30
     
-    - name: Chequeo de microservicio en container.
-      uses: gerdemann/http-status-code@1.0.0
-      with:
-        url: ${{ secrets.URL_TEST }}
-        code: 200 
-        timeout: 60 
-        interval: 10    
+    # - name: Chequeo de microservicio en container.
+    #   uses: gerdemann/http-status-code@1.0.0
+    #   with:
+    #     url: ${{ secrets.URL_TEST }}
+    #     code: 200 
+    #     timeout: 60 
+    #     interval: 10    
     
+    - name: Deploy Stage
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'htts://127.0.0.1:8080/orders'
+        method: 'POST'
+        #username: ${{ secrets.AWX_USER }}
+        #password: ${{ secrets.AWX_PASSWORD }}
+        customHeaders: '{"Content-Type": "application/json"}'
+        data: '[ "123", "321", "111" ]'
+
     - name: Buildeo y push a docker
       uses: docker/build-push-action@v3
       with:
