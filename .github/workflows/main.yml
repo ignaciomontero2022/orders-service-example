@@ -76,7 +76,7 @@ jobs:
     
     - name: Levanto docker
       run: |
-        docker run -d --name products-service-example -p 8080:8080 ignaciomontero2022/orders-service-example:${{ github.sha }}
+        docker run -d --name orders-service-example -p 8080:8080 ignaciomontero2022/orders-service-example:${{ github.sha }}
         sleep 30
     
     # - name: Chequeo de microservicio en container.
@@ -95,7 +95,7 @@ jobs:
         #username: ${{ secrets.AWX_USER }}
         #password: ${{ secrets.AWX_PASSWORD }}
         customHeaders: '{"Content-Type": "application/json"}'
-        data: '{ "123", "321", "111" }'
+        data: '[ "123", "321", "111" ]'
 
     - name: Buildeo y push a docker
       uses: docker/build-push-action@v3
