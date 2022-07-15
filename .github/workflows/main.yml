@@ -78,7 +78,8 @@ jobs:
       run: |
         docker run -d --name orders-service-example -p 8080:8080 ignaciomontero2022/orders-service-example:${{ github.sha }}
         sleep 30
-    
+        curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]'
+
     # - name: Chequeo de microservicio en container.
     #   uses: gerdemann/http-status-code@1.0.0
     #   with:
@@ -87,15 +88,6 @@ jobs:
     #     timeout: 60 
     #     interval: 10    
     
-    - name: Deploy Stage
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: 'http://127.0.0.1:8080/orders'
-        method: 'POST'
-        #username: ${{ secrets.AWX_USER }}
-        #password: ${{ secrets.AWX_PASSWORD }}
-        customHeaders: '{"Content-Type": "application/json"}'
-        data: '{ "123", "321", "111" }'
 
     - name: Buildeo y push a docker
       uses: docker/build-push-action@v3
