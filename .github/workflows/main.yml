@@ -71,12 +71,12 @@ jobs:
         context: .
         load: true
         build-args: |
-            JAR_FILE=orders-service-example.jar
+            JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
         tags: ignaciomontero2022/orders-service-example:${{ github.sha }}
     
     - name: Levanto docker
       run: |
-        docker run -d --name orders-service-example -p 8080:8080 ignaciomontero2022/orders-service-example:${{ github.sha }}
+        docker run -d --name orders-service-example -p 8080:8080  --env "APP_ARGS=http://127.0.0.1:8080 http://127.0.0.1:8080 http://127.0.0.1:8080" ignaciomontero2022/orders-service-example:${{ github.sha }}
         sleep 30
         curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]'
 
