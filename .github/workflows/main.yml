@@ -72,7 +72,6 @@ jobs:
         load: true
         build-args: |
           JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
-          APP_ARGS="http://127.0.0.1:8080,http://127.0.0.1:8082,http://127.0.0.1:8081"
         tags: ignaciomontero2022/orders-service-example:${{ github.sha }}
     
     - name: Levanto docker
