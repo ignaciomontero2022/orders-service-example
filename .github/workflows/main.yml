@@ -78,7 +78,7 @@ jobs:
       run: |
         docker run -d --name orders-service-example -p 8080:8080  --env "APP_ARGS=http://127.0.0.1:8080 http://127.0.0.1:8080 http://127.0.0.1:8080" ignaciomontero2022/orders-service-example:${{ github.sha }}
         sleep 30
-        curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]')
+        curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]'
         
     # - name: Chequeo de microservicio en container.
     #   uses: gerdemann/http-status-code@1.0.0
