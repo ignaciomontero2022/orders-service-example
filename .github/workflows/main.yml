@@ -80,6 +80,15 @@ jobs:
         sleep 30
         curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]' | grep -e "orderId"
         echo $?
+        if [ "$?" -ne 0 ]
+        then
+          exit 1
+          echo "Nope!"
+        else
+          echo "Prueba exitosa"
+        fi
+   
+}
      
 
     - name: Buildeo y push a docker
