@@ -11,14 +11,15 @@ jobs:
     name: Escaneo con Sonarcloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout del codigo desde GitHub.
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  
-      - name: Set up JDK 11
+      - name: Set up JDK 11.
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache SonarCloud packages
+      - name: Cache SonarCloud packages.
         uses: actions/cache@v1
         with:
           path: ~/.sonar/cache
@@ -30,13 +31,13 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
+      - name: Escaneo con SoncarCloud.
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJETKEY }}
       
-      - name: SonarQube Quality Gate check
+      - name: Chequeo de SonarCloud Quality Gate. 
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5 
         env: 
@@ -50,7 +51,7 @@ jobs:
     needs: Sonarcloud
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout del codigo
+    - name: Checkout del codigo desde GitHub.
       uses: actions/checkout@v3
     - name: Setup del JDK.
       uses: actions/setup-java@v1
