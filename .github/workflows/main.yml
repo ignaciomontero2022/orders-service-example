@@ -111,7 +111,7 @@ jobs:
       with:
         version: 'v1.23.6'
         
-    - name: Cargo configuración de Kubectl.
+    - name: Cargo configuración de Kubectl..
       uses: tale/kubectl-action@v1
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG }}
