@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: orders-app
-        image: ignaciomontero2022/orders-service-example
+        image: ignaciomontero2022/orders-service-example:latest
         env:
          - name: APP_ARGS
            value: "http://172.20.1.40 http://172.20.1.10 http://172.20.1.20"
