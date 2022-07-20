@@ -89,7 +89,7 @@ jobs:
               echo "Prueba exitosa"
             fi   
       
-    - name: Buildeo y push a docker
+    - name: Buildeo y push a docker.
       uses: docker/build-push-action@v3
       with:
         context: .
