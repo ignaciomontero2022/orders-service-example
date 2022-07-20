@@ -96,7 +96,7 @@ jobs:
         push: true
         build-args: |
           JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
-        tags: ignaciomontero2022/orders-example:latest 
+        tags: ignaciomontero2022/orders-service-example:latest
     
     - name: Login a AWS Credentials.
       uses: aws-actions/configure-aws-credentials@v1
