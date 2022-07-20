@@ -73,22 +73,31 @@ jobs:
         load: true
         build-args: |
             JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
-        tags: ignaciomontero2022/orders-service-example:${{ github.sha }}
+        tags: ignaciomontero2022/orders-service-example:latest
     
     - name: Levanto docker y hago test.
-      run: |
-        docker run -d --name orders-service-example -p 8080:8080  --env "APP_ARGS=http://127.0.0.1:8080 http://127.0.0.1:8080 http://127.0.0.1:8080" ignaciomontero2022/orders-service-example:${{ github.sha }}
-        sleep 30
-        curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]' | grep -e "orderId"
-        echo $?
-        if [ "$?" -ne 0 ]
-        then
-          exit 1
-          echo "Falló!"
-        else
-          echo "Prueba exitosa"
-        fi
-  
+          run: |
+            docker run -d --name orders-service-example -p 8080:8080  --env "APP_ARGS=http://127.0.0.1:8080 http://127.0.0.1:8080 http://127.0.0.1:8080" ignaciomontero2022/orders-service-example:${{ github.sha }}
+            sleep 30
+            curl --location --request POST '127.0.0.1:8080/orders' --header 'Content-Type: application/json' --data-raw '[ "123", "321", "111" ]' | grep -e "orderId"
+            
+            if [ "$?" -ne 0 ]
+            then
+              exit 1
+              echo "Falló!"
+            else
+              echo "Prueba exitosa"
+            fi   
+      
+    - name: Buildeo y push a docker
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        build-args: |
+          JAR_FILE=target/orders-service-example-0.0.1-SNAPSHOT-spring-boot.jar
+        tags: ignaciomontero2022/orders-example:latest 
+    
     - name: Login a AWS Credentials.
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -99,14 +108,17 @@ jobs:
     
     - name: Instalación de kubectl   
       uses: azure/setup-kubectl@v2.0
-        with:
-         version: 'v1.23.6'
-          
+      with:
+        version: 'v1.23.6'
+        
     - name: Cargo configuración de Kubectl.
       uses: tale/kubectl-action@v1
-        with:
-          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-          kubectl-version: v1.23.6
-      
+      with:
+        base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+        kubectl-version: v1.23.6
+    
     - name: Deploy de imagen a EKS. 
       run: kubectl apply -f  orders.yaml
+   
+  
+  
