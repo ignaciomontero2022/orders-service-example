@@ -1,4 +1,4 @@
-name: Build de imagenes v2.
+name: Build de imagenes y deploy de app a EKS AWS
 
 on:
   push:
@@ -46,7 +46,7 @@ jobs:
           scanMetadataReportFile: target/sonar/report-task.txt
           
 
-  build_imagen_a_container:
+  Build_imagen_y_deploy:
     name: Buildeo de imagen, test y publicación a AWS.
     needs: Sonarcloud
     runs-on: ubuntu-latest
